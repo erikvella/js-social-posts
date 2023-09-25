@@ -7,7 +7,9 @@
 // prendo le mie constanti/variabili
 
 const feed = document.querySelector('#container') ;
-
+let likedPosts = [];
+const likeBtn = document.querySelector('.likes');
+let likeCounter = document.querySelector('.js-likes-counter');
 
 
 // array con tutti i post
@@ -116,3 +118,11 @@ for(let post of posts){
   </div>            
 </div>`
 }
+
+// Rendo dinamico il tasto dei Likes 
+
+likeBtn.addEventListener('click' , function(){
+    this.classList.add('clicked');
+    likeCounter ++;
+    console.log('mi hai cliccato!');
+})
