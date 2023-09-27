@@ -7,9 +7,9 @@
 // prendo le mie constanti/variabili
 
 const feed = document.querySelector('#container') ;
-let likedPosts = [];
-const likeBtn = document.querySelector('.likes');
-let likeCounter = document.querySelector('.js-likes-counter');
+let likedPosts = [2 , 3];
+const likeBtn = document.querySelectorAll('.js-like-button');
+let likeCounters = document.querySelectorAll('.js-likes-counter');
 
 
 // array con tutti i post
@@ -121,8 +121,48 @@ for(let post of posts){
 
 // Rendo dinamico il tasto dei Likes 
 
-likeBtn.addEventListener('click' , function(){
-    this.classList.add('clicked');
-    likeCounter ++;
-    console.log('mi hai cliccato!');
-})
+function isPostLiked(id){
+    // se l'id è incluso nell'array dei post che mi piacciono, restutuisce true altrimenti false
+    return likedPosts.includes(id);
+}
+
+// faccio un ciclo for each dei bottoni 
+
+likeBtn.forEach((btn , index) => {
+// do una proprietà custom ai bottoni per identificarli 
+    btn._id = post[index].id;
+// salvo l'indice dell'array nel bottone
+   btn._index = index;
+// do il listener di eventi ai bottoni
+   btn.addEventListener('click' , handleLikeBtn);
+    
+});
+
+
+
+
+// funzione per regolare i like con rispettivo counter
+
+function handleLikeBtn(event){
+//   neutralizzo la funzionalità del link (tag a) così non ricarica la pagina
+event.preventDefault();
+// metto/tolgo la classe .like-button--like 
+this.classList.toggle('like-button--like');
+// uso find() 
+const postSelected = posts.find(post => post.id === this._id);
+// se l'id del bottone è incluso nell'array dei post che mi piacciono devo:
+// - leggere i numeri di likes e decrementarli
+// - togliere l'id dall'elenco likedPosts
+if(likedPosts.includes(this._id)){
+  // sovrascrivo likedPosts con un filter escludendo l'elemento che ha lo stesso id
+    likedPosts.filter(likesId => likesId !== this._id);
+    postSelected.likes--;
+}else{
+    postSelected.likes++;
+    likedPosts.push(this._id);
+}
+
+// stampo il conteggio dei likes aggiornati
+
+likeCounters[this.index].innerText = postSelected.likes;
+}
